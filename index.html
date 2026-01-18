@@ -3,19 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台語對話練習</title>
+    <title>台語語音對話練習</title>
 </head>
 <body>
-    <h1>台語口語對話練習</h1>
-    <p>歡迎使用這個頁面來練習台語對話。你可以在下方看到一些簡單的對話題庫。</p>
-    
-    <h2>練習題庫</h2>
-    <ul>
-        <li>你叫什麼名字？（Lí kiò siánn-mih miâ?）</li>
-        <li>你住佗位？（Lí tù to-uī?）</li>
-        <li>你平常攏按怎過日子？（Lí pêng-siông lóng án-tsuánn kuè ji̍t-tsí?）</li>
-    </ul>
-    
-    <p>試著大聲念出這些句子，並嘗試用台語回答這些問題吧！</p>
+    <h1>台語語音練習</h1>
+    <p>按下按鈕並開始說台語，我們會顯示你說的內容。</p>
+    <button onclick="startListening()">開始說話</button>
+    <p id="output"></p>
+
+    <script>
+        function startListening() {
+            const output = document.getElementById('output');
+            const recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'zh-TW'; // 設定語言為中文（台灣）
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                output.textContent = '你說的是：' + transcript;
+            };
+
+            recognition.start();
+        }
+    </script>
 </body>
 </html>
+
+
