@@ -3,268 +3,149 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>台語口語對話練習（聊天泡泡＋漢字/台羅）</title>
+<title>台語口語對話練習（聊天泡泡＋標準台羅）</title>
 <style>
-  :root {
-    --bg: #ffffff;
-    --border: #e6e6e6;
-    --muted: #666;
-    --sys: #f6f7f9;
-    --user: #eef6ff;
+  :root{
+    --bg:#fff; --border:#e6e6e6; --muted:#666;
+    --sys:#f6f7f9; --user:#eef6ff; --hint:#fff7e6;
   }
-
-  body {
-    margin: 0;
-    font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
-    background: var(--bg);
-    color: #111;
-  }
-
-  header {
-    padding: 16px 18px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  header h1 {
-    margin: 0 0 6px 0;
-    font-size: 18px;
-  }
-
-  header .sub {
-    margin: 0;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.4;
-  }
-
-  .wrap {
-    max-width: 860px;
-    margin: 0 auto;
-  }
-
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    align-items: center;
-  }
-
-  button {
-    padding: 10px 14px;
-    border: 1px solid var(--border);
-    background: #fff;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  button.primary {
-    background: #111;
-    color: #fff;
-    border-color: #111;
-  }
-  button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  select {
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-size: 14px;
-    background: #fff;
-  }
-
-  .status {
-    padding: 0 18px 12px 18px;
-    color: var(--muted);
-    font-size: 13px;
-  }
-
-  .chat {
-    padding: 14px 18px 22px 18px;
-    display: grid;
-    gap: 10px;
-  }
-
-  .msg {
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 10px 12px;
-    max-width: 720px;
-    width: fit-content;
-  }
-
-  .msg.sys {
-    background: var(--sys);
-    justify-self: start;
-  }
-
-  .msg.user {
-    background: var(--user);
-    justify-self: end;
-  }
-
-  .meta {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 6px;
-    color: var(--muted);
-    font-size: 12px;
-  }
-
-  .tag {
-    padding: 2px 8px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: #fff;
-    color: #333;
-    font-size: 12px;
-  }
-
-  .han {
-    font-size: 16px;
-    margin: 0;
-  }
-
-  .poj {
-    margin: 4px 0 0 0;
-    font-size: 13px;
-    color: #444;
-  }
-
-  .actions {
-    margin-top: 8px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .mini {
-    padding: 7px 10px;
-    font-size: 12px;
-    border-radius: 10px;
-  }
-
-  footer {
-    padding: 12px 18px 22px 18px;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.5;
-  }
-
-  code {
-    background: #f3f3f3;
-    padding: 2px 6px;
-    border-radius: 8px;
-  }
+  body{ margin:0; font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif; background:var(--bg); color:#111;}
+  header{ padding:16px 18px; border-bottom:1px solid var(--border);}
+  header h1{ margin:0 0 6px 0; font-size:18px;}
+  header .sub{ margin:0; color:var(--muted); font-size:13px; line-height:1.4;}
+  .wrap{ max-width:860px; margin:0 auto;}
+  .controls{ display:flex; flex-wrap:wrap; gap:10px; padding:14px 18px; border-bottom:1px solid var(--border); align-items:center;}
+  button{ padding:10px 14px; border:1px solid var(--border); background:#fff; border-radius:10px; cursor:pointer; font-size:14px;}
+  button.primary{ background:#111; color:#fff; border-color:#111;}
+  button:disabled{ opacity:.5; cursor:not-allowed;}
+  select{ padding:10px 12px; border:1px solid var(--border); border-radius:10px; font-size:14px; background:#fff;}
+  .status{ padding:0 18px 12px 18px; color:var(--muted); font-size:13px;}
+  .chat{ padding:14px 18px 22px 18px; display:grid; gap:10px;}
+  .msg{ border:1px solid var(--border); border-radius:14px; padding:10px 12px; max-width:720px; width:fit-content;}
+  .msg.sys{ background:var(--sys); justify-self:start;}
+  .msg.user{ background:var(--user); justify-self:end;}
+  .msg.hint{ background:var(--hint); justify-self:start;}
+  .meta{ display:flex; gap:8px; align-items:center; margin-bottom:6px; color:var(--muted); font-size:12px;}
+  .tag{ padding:2px 8px; border-radius:999px; border:1px solid var(--border); background:#fff; color:#333; font-size:12px;}
+  .han{ font-size:16px; margin:0;}
+  .poj{ margin:4px 0 0 0; font-size:13px; color:#444;}
+  .actions{ margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;}
+  .mini{ padding:7px 10px; font-size:12px; border-radius:10px;}
+  footer{ padding:12px 18px 22px 18px; border-top:1px solid var(--border); color:var(--muted); font-size:12px; line-height:1.5;}
+  code{ background:#f3f3f3; padding:2px 6px; border-radius:8px;}
 </style>
 </head>
 
 <body>
-  <header>
-    <div class="wrap">
-      <h1>台語口語對話練習（聊天泡泡＋漢字/台羅）</h1>
-      <p class="sub">
-        這是「題庫引導式」：系統出題 → 你用嘴答 → 系統依關鍵字回應。每則訊息顯示漢字＋台羅，可重聽系統朗讀。
-      </p>
-    </div>
-  </header>
-
+<header>
   <div class="wrap">
-    <div class="controls">
-      <button id="btnStart" class="primary" onclick="startSession()">開始練習</button>
-      <button id="btnListen" onclick="listenAnswer()" disabled>我來回答（開始聽）</button>
-      <button onclick="clearChat()">清空對話</button>
+    <h1>台語口語對話練習（聊天泡泡＋標準台羅）</h1>
+    <p class="sub">
+      系統出題 → 你用嘴答 → 系統回應 → 顯示「建議作答（漢字＋台羅）」讓你跟讀對照。
+    </p>
+  </div>
+</header>
 
-      <label style="margin-left:auto; color:#333; font-size:14px;">
-        模式：
-        <select id="mode" onchange="setMode()">
-          <option value="guided" selected>題庫引導（推薦）</option>
-          <option value="free">自由一句（不推進題庫）</option>
-        </select>
-      </label>
-    </div>
+<div class="wrap">
+  <div class="controls">
+    <button id="btnStart" class="primary" onclick="startSession()">開始練習</button>
+    <button id="btnListen" onclick="listenAnswer()" disabled>我來回答（開始聽）</button>
+    <button onclick="clearChat()">清空對話</button>
 
-    <div id="status" class="status">狀態：等待開始</div>
-
-    <div id="chat" class="chat"></div>
-
-    <footer>
-      <div><strong>務實提醒</strong></div>
-      <div>
-        1) 瀏覽器語音辨識多用 <code>zh-TW</code> 華語模型，台語可能辨識不準，這是常見限制。<br/>
-        2) 若你更新後看不到新內容，請用 Ctrl+F5 強制刷新或清除快取。<br/>
-        3) 建議用 Chrome（桌機）測試，並允許麥克風權限。
-      </div>
-    </footer>
+    <label style="margin-left:auto; color:#333; font-size:14px;">
+      模式：
+      <select id="mode" onchange="setMode()">
+        <option value="guided" selected>題庫引導（推薦）</option>
+        <option value="free">自由一句（不推進題庫）</option>
+      </select>
+    </label>
   </div>
 
+  <div id="status" class="status">狀態：等待開始</div>
+  <div id="chat" class="chat"></div>
+
+  <footer>
+    <div><strong>務實提醒</strong></div>
+    <div>
+      1) 語音辨識多用 <code>zh-TW</code> 華語模型，台語可能辨識不準。這是常見限制。<br/>
+      2) 建議用 Chrome（桌機），並允許麥克風權限。<br/>
+      3) 更新後若看不到新內容：Ctrl+F5 強制刷新。
+    </div>
+  </footer>
+</div>
+
 <script>
-/* =========================
-   1) 題庫（漢字 + 台羅）
-   ========================= */
-const QUESTIONS = [
-  { han: "你好，今仔日心情好無？", poj: "Lí hó, kin-á-jit sim-tsîng hó bô?" },
-  { han: "你叫啥物名？",         poj: "Lí kiò siánn-mih miâ?" },
-  { han: "你佇佗位蹛？",         poj: "Lí tī tó-uī tuà?" },
-  { han: "你今仔日欲做啥物？",     poj: "Lí kin-á-jit beh tsò siánn-mih?" }
+/* ========= 題庫：題目 + 建議作答（漢字/台羅） =========
+   你可以一直加更多題目與建議作答
+*/
+const QA = [
+  {
+    q: { han: "你好，今仔日心情好無？", poj: "Lí hó, kin-á-jit sim-tsîng hó bô?" },
+    a: [
+      { han: "好，真好。", poj: "Hó, tsin hó." },
+      { han: "無好，心情有淡薄歹。", poj: "Bô hó, sim-tsîng ū tām-po̍h phái." }
+    ]
+  },
+  {
+    q: { han: "你叫啥物名？", poj: "Lí kiò siánn-mih miâ?" },
+    a: [
+      { han: "我叫＿＿＿。", poj: "Guá kiò ___." }
+    ]
+  },
+  {
+    q: { han: "你佇佗位蹛？", poj: "Lí tī tó-uī tuà?" },
+    a: [
+      { han: "我佇台南蹛。", poj: "Guá tī Tâi-lâm tuà." },
+      { han: "我佇＿＿＿蹛。", poj: "Guá tī ___ tuà." }
+    ]
+  },
+  {
+    q: { han: "你今仔日欲做啥物？", poj: "Lí kin-á-jit beh tsò siánn-mih?" },
+    a: [
+      { han: "我欲去運動／讀冊／上課。", poj: "Guá beh khì ūn-tōng / tha̍k-tsheh / siōng-khò." }
+    ]
+  }
 ];
 
-/* =========================
-   2) 回應模板（漢字 + 台羅）
-   - 你可一直加
-   ========================= */
+/* ========= 回應模板（系統回應） ========= */
 const REPLIES = {
-  good:      { han: "真好，繼續保持好心情。", poj: "Tsin hó, kè-sio̍k pó-tsî hó sim-tsîng." },
-  bad:       { han: "無要緊，慢慢來，攏會好起來。", poj: "Bô iàu-kín, bān-bān lâi, lóng ē hó khí-lâi." },
-  nameAsk:   { han: "你會當講：我叫＿＿＿。", poj: "Lí ē-tàng kóng: Guá kiò ___." },
-  placeAsk:  { han: "你會當講：我佇＿＿＿蹛。", poj: "Lí ē-tàng kóng: Guá tī ___ tuà." },
-  planAsk:   { han: "好喔，你欲做的代誌聽起來真讚。", poj: "Hó--o, lí beh tsò ê tāi-tsì thiann khí-lâi tsin tsàn." },
-  askAgain:  { han: "我有聽著你講話。你欲閣再講一擺無？", poj: "Guá ū thiann-tio̍h lí kóng-uē. Lí beh koh tsài kóng tsi̍t pái bô?" }
+  good:     { han: "真好，繼續保持好心情。", poj: "Tsin hó, kè-sio̍k pó-tsî hó sim-tsîng." },
+  bad:      { han: "無要緊，慢慢來，攏會好起來。", poj: "Bô iàu-kín, bān-bān lâi, lóng ē hó khí-lâi." },
+  nameAsk:  { han: "你會當講：我叫＿＿＿。", poj: "Lí ē-tàng kóng: Guá kiò ___." },
+  placeAsk: { han: "你會當講：我佇＿＿＿蹛。", poj: "Lí ē-tàng kóng: Guá tī ___ tuà." },
+  planAsk:  { han: "好喔，你欲做的代誌聽起來真讚。", poj: "Hó--o, lí beh tsò ê tāi-tsì thiann khí-lâi tsin tsàn." },
+  askAgain: { han: "我有聽著你講話。你欲閣再講一擺無？", poj: "Guá ū thiann-tio̍h lí kóng-uē. Lí beh koh tsài kóng tsi̍t pái bô?" }
 };
 
-/* =========================
-   3) 語音：TTS（朗讀）
-   ========================= */
+/* ========= TTS（朗讀） ========= */
 const synth = window.speechSynthesis;
-
 function speak(textHan) {
   if (!synth) return;
   const u = new SpeechSynthesisUtterance(textHan);
   u.lang = "zh-TW";
-  // 避免重疊朗讀
   synth.cancel();
   synth.speak(u);
 }
 
-/* =========================
-   4) 聊天泡泡 UI
-   ========================= */
+/* ========= UI：聊天泡泡 ========= */
 const chatEl = document.getElementById("chat");
 const statusEl = document.getElementById("status");
 const btnStart = document.getElementById("btnStart");
 const btnListen = document.getElementById("btnListen");
 const modeEl = document.getElementById("mode");
 
-function setStatus(t) {
-  statusEl.textContent = "狀態：" + t;
-}
+function setStatus(t){ statusEl.textContent = "狀態：" + t; }
 
 function addMsg(role, han, poj, options = {}) {
   const msg = document.createElement("div");
-  msg.className = "msg " + (role === "sys" ? "sys" : "user");
+  msg.className = "msg " + (role === "sys" ? "sys" : role === "user" ? "user" : "hint");
 
   const meta = document.createElement("div");
   meta.className = "meta";
 
   const tag = document.createElement("span");
   tag.className = "tag";
-  tag.textContent = role === "sys" ? "系統" : "你";
+  tag.textContent = role === "sys" ? "系統" : role === "user" ? "你" : "提示";
   meta.appendChild(tag);
 
   if (options.note) {
@@ -285,75 +166,60 @@ function addMsg(role, han, poj, options = {}) {
   msg.appendChild(pHan);
   msg.appendChild(pPoj);
 
-  // 系統訊息加「重聽」按鈕
   if (role === "sys") {
     const actions = document.createElement("div");
     actions.className = "actions";
+
     const replayBtn = document.createElement("button");
     replayBtn.className = "mini";
     replayBtn.textContent = "重聽";
     replayBtn.onclick = () => speak(han);
     actions.appendChild(replayBtn);
+
     msg.appendChild(actions);
   }
 
   chatEl.appendChild(msg);
-  // 自動捲到底
-  msg.scrollIntoView({ behavior: "smooth", block: "end" });
+  msg.scrollIntoView({ behavior:"smooth", block:"end" });
 }
 
-function clearChat() {
+function clearChat(){
   chatEl.innerHTML = "";
   setStatus("已清空，等待開始");
   btnListen.disabled = true;
+  sessionStarted = false;
 }
 
-/* =========================
-   5) 對話流程（題庫推進）
-   ========================= */
-let qIndex = 0;
+/* ========= 流程 ========= */
+let idx = 0;
 let sessionStarted = false;
 
-function setMode() {
-  // 僅更新狀態提示
-  const m = modeEl.value;
-  setStatus(m === "guided" ? "題庫引導模式" : "自由一句模式");
+function setMode(){
+  setStatus(modeEl.value === "guided" ? "題庫引導模式" : "自由一句模式");
 }
 
-function startSession() {
+function startSession(){
   sessionStarted = true;
-  qIndex = 0;
+  idx = 0;
   chatEl.innerHTML = "";
-
-  setStatus("開始練習");
   btnListen.disabled = false;
-
-  askNextQuestion();
+  setStatus("開始練習");
+  askQuestion();
 }
 
-function askNextQuestion() {
-  const q = QUESTIONS[qIndex % QUESTIONS.length];
-  addMsg("sys", q.han, q.poj, { note: "題目" });
-  speak(q.han);
-
-  // 避免系統朗讀被辨識：稍等再開放回答
+function askQuestion(){
+  const item = QA[idx % QA.length];
+  addMsg("sys", item.q.han, item.q.poj, { note: "題目" });
+  speak(item.q.han);
   setStatus("請按「我來回答」開始聽你講話");
 }
 
-/* =========================
-   6) 語音辨識（聽你回答）
-   ========================= */
-function listenAnswer() {
-  if (!sessionStarted) {
-    alert("請先按「開始練習」。");
-    return;
-  }
+/* ========= 語音辨識 ========= */
+function listenAnswer(){
+  if (!sessionStarted) { alert("請先按「開始練習」。"); return; }
 
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    alert("你的瀏覽器不支援 SpeechRecognition。建議用 Chrome（桌機）。");
-    return;
-  }
+  if (!SR) { alert("瀏覽器不支援 SpeechRecognition，建議用 Chrome（桌機）。"); return; }
 
   const rec = new SR();
   rec.lang = "zh-TW";
@@ -364,56 +230,60 @@ function listenAnswer() {
 
   rec.onresult = (event) => {
     const text = event.results?.[0]?.[0]?.transcript || "";
-    addMsg("user", text || "（沒有辨識到內容）", "（台羅需人工或題庫對照）", { note: "辨識結果" });
+    addMsg("user", text || "（沒有辨識到內容）", "（口說→文字；台羅用標準答案對照）", { note: "辨識結果" });
 
+    // 系統回應（依你講的內容做簡單判斷）
     const reply = chooseReply(text);
     addMsg("sys", reply.han, reply.poj, { note: "回應" });
     speak(reply.han);
 
-    const mode = modeEl.value;
-    if (mode === "guided") {
-      qIndex++;
-      setStatus("你可以繼續回答下一題");
-      // 主動出下一題（延遲一下，避免朗讀干擾）
-      setTimeout(() => askNextQuestion(), 900);
+    // 顯示「建議作答（標準答案）」：漢字＋台羅
+    if (modeEl.value === "guided") {
+      showSuggestedAnswers();
+      idx++;
+      setTimeout(() => askQuestion(), 900);
+      setStatus("準備下一題…");
     } else {
+      // 自由一句模式：仍可顯示「目前這題」建議作答，方便跟讀
+      showSuggestedAnswers();
       setStatus("自由一句完成（不推進題庫）");
     }
   };
 
   rec.onerror = (e) => {
     setStatus("辨識錯誤：" + (e.error || "unknown"));
-    // 常見：not-allowed（未允許麥克風）、no-speech（沒講到）
-  };
-
-  rec.onend = () => {
-    // 不強制改狀態，避免跟 onresult 打架
   };
 
   rec.start();
 }
 
-/* =========================
-   7) 回應邏輯（務實：關鍵字/意圖）
-   ========================= */
-function chooseReply(text) {
-  if (!text) return REPLIES.askAgain;
+/* ========= 顯示建議作答（本題標準答案） ========= */
+function showSuggestedAnswers(){
+  const item = QA[idx % QA.length];
+  const list = item.a;
 
+  // 把多個答案合成一則提示泡泡（更像教材）
+  const han = "建議作答：\n" + list.map(x => "• " + x.han).join("\n");
+  const poj = "Suggested (Tâi-lô):\n" + list.map(x => "• " + x.poj).join("\n");
+
+  addMsg("hint", han, poj, { note: "跟讀對照" });
+}
+
+/* ========= 回應邏輯（務實：關鍵字） ========= */
+function chooseReply(text){
+  if (!text) return REPLIES.askAgain;
   const t = text.replace(/\s+/g, "");
 
-  // 心情判斷（台語常被辨成含「好/不好」的華語字）
   if (t.includes("好") || t.includes("很好") || t.includes("開心")) return REPLIES.good;
   if (t.includes("不好") || t.includes("歹") || t.includes("難過") || t.includes("不爽")) return REPLIES.bad;
 
-  // 名字 / 地點 / 計畫：用一些可能出現的字觸發引導
   if (t.includes("叫") || t.includes("名字") || t.includes("名")) return REPLIES.nameAsk;
   if (t.includes("住") || t.includes("佇") || t.includes("台南") || t.includes("臺南") || t.includes("哪裡")) return REPLIES.placeAsk;
-  if (t.includes("要") || t.includes("欲") || t.includes("做") || t.includes("等一下") || t.includes("今天")) return REPLIES.planAsk;
+  if (t.includes("要") || t.includes("欲") || t.includes("做") || t.includes("今天") || t.includes("等一下")) return REPLIES.planAsk;
 
   return REPLIES.askAgain;
 }
 
-// 初始模式狀態
 setMode();
 </script>
 </body>
