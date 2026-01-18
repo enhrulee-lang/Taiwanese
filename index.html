@@ -1,85 +1,189 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>台語口語對話練習</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>台語口語對話練習（漢字 / 台羅對照）</title>
 <style>
-body {
-    font-family: sans-serif;
-    padding: 20px;
-}
-button {
-    font-size: 18px;
-    padding: 10px 20px;
-}
-.box {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-}
+  body { font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif; padding: 20px; line-height: 1.6; }
+  h1 { margin-bottom: 8px; }
+  .hint { color: #555; margin-top: 0; }
+  button { font-size: 16px; padding: 10px 16px; cursor: pointer; }
+  .row { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 16px; }
+  .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px 14px; }
+  .label { font-weight: 700; margin-bottom: 6px; }
+  .pair { display: grid; gap: 4px; }
+  .han { font-size: 18px; }
+  .poj { font-size: 15px; color: #444; }
+  .small { font-size: 13px; color: #666; }
+  .warn { color: #8a4b00; }
+  code { background: #f5f5f5; padding: 2px 6px; border-radius: 6px; }
 </style>
 </head>
 <body>
 
 <h1>台語口語對話練習</h1>
+<p class="hint">目標：用嘴講 → 網頁聽 → 依題庫回應（並顯示漢字 / 台羅對照）。</p>
 
-<p id="system">系統：按「開始對話」</p>
+<button id="btnStart" onclick="startConversation()">開始對話</button>
+<button onclick="listenOnce()">只聽我講（一次）</button>
 
-<button onclick="startConversation()">開始對話</button>
+<div class="row">
+  <div class="card">
+    <div class="label">系統題目</div>
+    <div class="pair">
+      <div id="qHan" class="han">—</div>
+      <div id="qPoj" class="poj">—</div>
+    </div>
+    <div id="sysStatus" class="small">狀態：等待開始</div>
+  </div>
 
-<div class="box">
-    <strong>你講：</strong>
-    <p id="userText"></p>
-</div>
+  <div class="card">
+    <div class="label">你講（辨識結果）</div>
+    <div id="userText" class="han">—</div>
+    <div class="small warn">提醒：瀏覽器多半用 <code>zh-TW</code> 華語模型，台語辨識可能會歪。這是正常限制。</div>
+  </div>
 
-<div class="box">
-    <strong>系統回應：</strong>
-    <p id="replyText"></p>
+  <div class="card">
+    <div class="label">系統回應（漢字 / 台羅）</div>
+    <div class="pair">
+      <div id="rHan" class="han">—</div>
+      <div id="rPoj" class="poj">—</div>
+    </div>
+  </div>
 </div>
 
 <script>
+/**
+ * 重要說明（務實）：
+ * - Web Speech API 的語音辨識語言用 zh-TW，通常是「台灣華語」模型，不是台語專用模型。
+ * - 因此我們做「題庫引導式對話」：用關鍵字/意圖去回應，而不是追求完全自由對話。
+ */
+
 const synth = window.speechSynthesis;
 
-function speak(text) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'zh-TW';
-    synth.speak(utter);
+// 題庫（你可以一直加）
+const QUESTIONS = [
+  { han: "你好，今仔日心情好無？", poj: "Lí hó, kin-á-jit sim-tsîng hó bô?" },
+  { han: "你叫啥物名？",         poj: "Lí kiò siánn-mih miâ?" },
+  { han: "你佇佗位蹛？",         poj: "Lí tī tó-uī tuà?" }
+];
+
+// 回應模板（示範：依你講的內容做簡單判斷）
+const REPLIES = {
+  good: { han: "真好，繼續保持好心情。", poj: "Tsin hó, kè-sio̍k pó-tsî hó sim-tsîng." },
+  bad:  { han: "無要緊，慢慢來，攏會好起來。", poj: "Bô iàu-kín, bān-bān lâi, lóng ē hó khí-lâi." },
+  askAgain: { han: "我有聽著你講話。你欲閣再講一擺無？", poj: "Guá ū thiann-tio̍h lí kóng-uē. Lí beh koh tsài kóng tsi̍t pái bô?" }
+};
+
+let qIndex = 0;
+
+function setQuestion(q) {
+  document.getElementById("qHan").textContent = q.han;
+  document.getElementById("qPoj").textContent = q.poj;
+}
+
+function setReply(r) {
+  document.getElementById("rHan").textContent = r.han;
+  document.getElementById("rPoj").textContent = r.poj;
+}
+
+function setStatus(msg) {
+  document.getElementById("sysStatus").textContent = "狀態：" + msg;
+}
+
+function speak(textHan) {
+  if (!synth) return;
+  const u = new SpeechSynthesisUtterance(textHan);
+  u.lang = "zh-TW";
+  // 注意：TTS 也不一定是台語聲線；多數是華語聲線，但仍可用來「提示朗讀」。
+  synth.cancel();
+  synth.speak(u);
 }
 
 function startConversation() {
-    const question = "你好，今仔日心情好無？";
-    document.getElementById("system").textContent = "系統：" + question;
-    speak(question);
-    listen();
+  qIndex = 0;
+  nextTurn();
 }
 
-function listen() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'zh-TW';
+function nextTurn() {
+  const q = QUESTIONS[qIndex % QUESTIONS.length];
+  setQuestion(q);
+  setReply({ han: "—", poj: "—" });
+  setStatus("系統提問中…");
+  speak(q.han);
 
-    recognition.onresult = function(event) {
-        const text = event.results[0][0].transcript;
-        document.getElementById("userText").textContent = text;
-
-        const reply = getReply(text);
-        document.getElementById("replyText").textContent = reply;
-        speak(reply);
-    };
-
-    recognition.start();
+  // 等系統講完一小段再開始聽（避免把系統朗讀也聽進去）
+  setTimeout(() => {
+    setStatus("請開始講話…（聆聽中）");
+    listenOnce(true);
+  }, 900);
 }
 
-function getReply(text) {
-    if (text.includes("好")) {
-        return "真好，繼續保持好心情。";
+/**
+ * listenOnce(continueFlow)
+ * - continueFlow=true：會自動進入下一題
+ * - continueFlow=false：只聽一次，不推進題庫
+ */
+function listenOnce(continueFlow = false) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    alert("你的瀏覽器不支援 SpeechRecognition。建議用 Chrome（桌機）測試。");
+    return;
+  }
+
+  const rec = new SR();
+  rec.lang = "zh-TW";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+
+  rec.onresult = (event) => {
+    const text = event.results?.[0]?.[0]?.transcript || "";
+    document.getElementById("userText").textContent = text || "（沒有辨識到內容）";
+
+    const reply = chooseReply(text);
+    setReply(reply);
+    setStatus("系統回應中…");
+    speak(reply.han);
+
+    if (continueFlow) {
+      qIndex++;
+      // 等回應講完再進下一題（簡單估算時間）
+      setTimeout(() => {
+        setStatus("準備下一題…");
+        nextTurn();
+      }, 1200);
+    } else {
+      setStatus("完成一次聆聽");
     }
-    if (text.includes("歹") || text.includes("不好")) {
-        return "無要緊，慢慢來，攏會好起來。";
-    }
-    return "我有聽著你講話，你欲閣再講一遍無？";
+  };
+
+  rec.onerror = (e) => {
+    setStatus("辨識錯誤：" + (e.error || "unknown"));
+    // 常見：not-allowed（未允許麥克風）、no-speech（沒講到）
+  };
+
+  rec.onend = () => {
+    // 如果沒有 result 也會走到這裡
+    // 保持狀態不強制改，避免混亂
+  };
+
+  rec.start();
 }
+
+function chooseReply(text) {
+  // 這裡用「粗略關鍵字」：因為台語會被辨成怪華語，所以抓「好/不好/歹」這類仍常出現的詞
+  if (!text) return REPLIES.askAgain;
+
+  const t = text.replace(/\s+/g, "");
+  if (t.includes("好") || t.includes("很好") || t.includes("開心")) return REPLIES.good;
+  if (t.includes("不好") || t.includes("歹") || t.includes("難過") || t.includes("不爽")) return REPLIES.bad;
+
+  return REPLIES.askAgain;
+}
+
+// 初始化顯示第一題（但不自動開始聽）
+setQuestion(QUESTIONS[0]);
 </script>
 
 </body>
