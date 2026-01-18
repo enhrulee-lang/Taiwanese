@@ -1,32 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台語語音對話練習</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台語口語對話練習</title>
+<style>
+body {
+    font-family: sans-serif;
+    padding: 20px;
+}
+button {
+    font-size: 18px;
+    padding: 10px 20px;
+}
+.box {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+</style>
 </head>
 <body>
-    <h1>台語語音對話練習</h1>
-    <p>按下按鈕並開始說台語，我們會顯示你說的內容。</p>
-    <button onclick="startListening()">開始說話</button>
-    <p id="output"></p>
 
-    <script>
-        function startListening() {
-            const output = document.getElementById('output');
-            const recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = 'zh-TW'; // 設定語言為中文（台灣）
+<h1>台語口語對話練習</h1>
 
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                output.textContent = '你說的是：' + transcript;
-            };
+<p id="system">系統：按「開始對話」</p>
 
-            recognition.start();
-        }
-    </script>
+<button onclick="startConversation()">開始對話</button>
+
+<div class="box">
+    <strong>你講：</strong>
+    <p id="userText"></p>
+</div>
+
+<div class="box">
+    <strong>系統回應：</strong>
+    <p id="replyText"></p>
+</div>
+
+<script>
+const synth = window.speechSynthesis;
+
+function speak(text) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'zh-TW';
+    synth.speak(utter);
+}
+
+function startConversation() {
+    const question = "你好，今仔日心情好無？";
+    document.getElementById("system").textContent = "系統：" + question;
+    speak(question);
+    listen();
+}
+
+function listen() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'zh-TW';
+
+    recognition.onresult = function(event) {
+        const text = event.results[0][0].transcript;
+        document.getElementById("userText").textContent = text;
+
+        const reply = getReply(text);
+        document.getElementById("replyText").textContent = reply;
+        speak(reply);
+    };
+
+    recognition.start();
+}
+
+function getReply(text) {
+    if (text.includes("好")) {
+        return "真好，繼續保持好心情。";
+    }
+    if (text.includes("歹") || text.includes("不好")) {
+        return "無要緊，慢慢來，攏會好起來。";
+    }
+    return "我有聽著你講話，你欲閣再講一遍無？";
+}
+</script>
+
 </body>
 </html>
-
-
-
